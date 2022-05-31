@@ -55,10 +55,12 @@ void triggerAnalysisSimple(std::string triggerFile = "openHLT.root",
     ULong64_t       hlt_event;
     Int_t           hlt_lumi;
     Int_t           hlt_run;
+    Bool_t           triggerDecision;
     std::cout << "Setting Event, lumi, and run branchAdresses...";
     treeTrig->SetBranchAddress("Event", &hlt_event);
     treeTrig->SetBranchAddress("LumiBlock", &hlt_lumi);
     treeTrig->SetBranchAddress("Run", &hlt_run);
+    treeTrig->SetBranchAddress("HLT_HICsAK4PFJet60Eta1p5_v",&triggerDecision);
     std::cout << "done" << std::endl;
 
 
@@ -122,14 +124,14 @@ void triggerAnalysisSimple(std::string triggerFile = "openHLT.root",
     ULong64_t evt;
     Float_t weight;
 
-
-
     treeHiEvt->SetBranchAddress("vz",&vz);
     treeHiEvt->SetBranchAddress("hiBin",&hiBin);
     treeHiEvt->SetBranchAddress("run",&run);
     treeHiEvt->SetBranchAddress("lumi",&lumi);
     treeHiEvt->SetBranchAddress("evt",&evt);
     treeHiEvt->SetBranchAddress("weight",&weight);
+
+
 
 
 
@@ -183,14 +185,18 @@ void triggerAnalysisSimple(std::string triggerFile = "openHLT.root",
 	unsigned long long key = keyFromRunLumiEvent(run,lumi,evt);
 
 	long long i_entry = -1;
-        if(runLumiEvtToEntryMap.count(key) == 0) continue;
+    if(runLumiEvtToEntryMap.count(key) == 0) continue;
 	else i_entry = runLumiEvtToEntryMap.at(key);
 
 	//std::cout << "i_entry = " << i_entry << std::endl;
 	
-
+    // get trigger decision from HLT emulation
+    treeTrig->GetEntry(i_entry);
+    std::cout << "triggerDecision = " << triggerDecision << std::endl;
+    if(!triggerDecision) continue;
 
 	Float_t maxPt_num = 0;
+    
 	// fill denom
 	for(Int_t i_jet = 0; i_jet < nref; i_jet++){
 
