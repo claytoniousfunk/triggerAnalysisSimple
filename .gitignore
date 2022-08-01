@@ -1,0 +1,13 @@
+*.root
+*.ods
+6-23-22/
+7-27-22/
+bashScript/
+bashScript_CBtestMenu/
+forestFiles_CB/
+HydjetMB_test/
+openHLTFiles/
+openHLTFiles_CB/
+openHLTFiles_CB2/
+rootFiles/
+test/
